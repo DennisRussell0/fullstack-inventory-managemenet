@@ -37,7 +37,7 @@ def parse_csv():
         )
         cursor = conn.cursor()
 
-        with open('data/Cereal.csv', mode='r', encoding='utf-8') as file:
+        with open('parser/data/Cereal.csv', mode='r', encoding='utf-8') as file:
             csv_reader = csv.reader(file, delimiter=';')
             rows = list(csv_reader)
             keys = rows[0]
@@ -45,8 +45,8 @@ def parse_csv():
             for row in rows[2:]:
                 row_dict = dict(zip(keys, row))
                 row_dict['manufacturer'] = generate_manufacturer(row_dict['manufacturer'])
-                row_dict['price'] = generate_price
-                row_dict['storage'] = generate_storage
+                row_dict['price'] = generate_price()
+                row_dict['storage'] = generate_storage()
                 row_dict['image_path'] = find_image_for_cereal(row_dict['name'])
                 
                 # Remove '.' from rating value
@@ -54,10 +54,10 @@ def parse_csv():
 
                 # Prepare query
                 columns = ', '.join([key for key in row_dict.keys() if key != 'id'])
-                placeholders = ', '.join(['%s'] * (len(row_dict) - 1))
+                placeholders = ', '.join(['%s'] * (len(row_dict)))
                 values = [value for key, value in row_dict.items() if key != 'id']
 
-                query = f"INSERT INTO cereal ({columns}) VALUES ({placeholders})"
+                query = f"INSERT INTO products ({columns}) VALUES ({placeholders})"
                 cursor.execute(query, values)
 
         conn.commit()
@@ -78,7 +78,7 @@ def normalize_name(name):
 
 def find_image_for_cereal(cereal_name):
     """Finds the best matching image file based on the product name."""
-    image_folder = os.path.join("static", "images")
+    image_folder = os.path.join("parser","static", "images")
     
     # Ensure the image folder exists
     if not os.path.exists(image_folder):
