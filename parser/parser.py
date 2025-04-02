@@ -1,41 +1,6 @@
 import csv
 import os, re, random
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-cereal_user = "postgres"
-password = "250101"
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{cereal_user}:{password}@localhost/cerealdatabase'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Not necessary - better performance
-
-db = SQLAlchemy()
-db.init_app(app)
-
-class Cereal(db.Model):
-    """Represents a cereal product in the database."""
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    mfr = db.Column(db.String(50), nullable=False)
-    type = db.Column(db.String(50), nullable=False)
-    calories = db.Column(db.Integer, nullable=False)
-    protein = db.Column(db.Integer, nullable=False)
-    fat = db.Column(db.Integer, nullable=False)
-    sodium = db.Column(db.Integer, nullable=False)
-    fiber = db.Column(db.Float, nullable=False)
-    carbo = db.Column(db.Float, nullable=False)
-    sugars = db.Column(db.Integer, nullable=False)
-    potass = db.Column(db.Integer, nullable=False)
-    vitamins = db.Column(db.Integer, nullable=False)
-    shelf = db.Column(db.Integer, nullable=False)
-    weight = db.Column(db.Float, nullable=False)
-    cups = db.Column(db.Float, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
-    image_path = db.Column(db.String(200), nullable=True)
-
-    price = db.Column(db.Integer, nullable=False)
-    storage = db.Column(db.Integer, nullable=False)
+import psycopg2
 
 def generate_price():
     return round(random.uniform(20, 50), 2)
@@ -43,54 +8,62 @@ def generate_price():
 def generate_storage():
     return random.randint(0, 10)
 
-def import_csv_data():
-    """Reads data from the CSV file and inserts it into the database."""
+def generate_manufacturer(manufacturer):
+    match manufacturer:
+        case "A":
+            return "American Home Food Products"
+        case "G":
+            return "General Mills"
+        case "K":
+            return "Kelloggs"
+        case "N":
+            return "Nabisco"
+        case "P":
+            return "Post"
+        case "Q":
+            return "Quaker Oats"
+        case "R":
+            return "Ralston Purina"
+        case default:
+            pass
+
+def parse_csv():
     try:
+        conn = psycopg2.connect(
+            dbname="cerealdatabase",
+            user="postgres",
+            password="250101",
+            host="localhost"
+        )
+        cursor = conn.cursor()
+
         with open('data/Cereal.csv', mode='r', encoding='utf-8') as file:
             csv_reader = csv.reader(file, delimiter=';')
-            
-            # Skip the first two rows (headers + data types)
-            next(csv_reader)
-            next(csv_reader)
-            
-            for row in csv_reader:
-                try:
-                    cereal_name = row[0].strip()
-                    image_path = find_image_for_cereal(cereal_name)
+            rows = list(csv_reader)
+            keys = rows[0]
 
-                    price = generate_price()
-                    storage = generate_storage()
-                    
-                    cereal = Cereal(
-                        name=cereal_name,
-                        mfr=row[1].strip(),
-                        type=row[2].strip(),
-                        calories=int(row[3]),
-                        protein=int(row[4]),
-                        fat=int(row[5]),
-                        sodium=int(row[6]),
-                        fiber=float(row[7]),
-                        carbo=float(row[8]),
-                        sugars=int(row[9]),
-                        potass=int(row[10]),
-                        vitamins=int(row[11]),
-                        shelf=int(row[12]),
-                        weight=float(row[13]),
-                        cups=float(row[14]),
-                        rating=float(row[15].replace('.', '')),
-                        image_path=image_path,
+            for row in rows[2:]:
+                row_dict = dict(zip(keys, row))
+                row_dict['manufacturer'] = generate_manufacturer(row_dict['manufacturer'])
+                row_dict['price'] = generate_price
+                row_dict['storage'] = generate_storage
+                row_dict['image_path'] = find_image_for_cereal(row_dict['name'])
+                
+                # Remove '.' from rating value
+                row_dict['rating'] = row_dict['rating'].replace('.', '')
 
-                        price=price,
-                        storage=storage
+                # Prepare query
+                columns = ', '.join([key for key in row_dict.keys() if key != 'id'])
+                placeholders = ', '.join(['%s'] * (len(row_dict) - 1))
+                values = [value for key, value in row_dict.items() if key != 'id']
 
-                    )
-                    db.session.add(cereal)
-                except (IndexError, ValueError) as e:
-                    print(f"Skipping row due to error: {e}")
+                query = f"INSERT INTO cereal ({columns}) VALUES ({placeholders})"
+                cursor.execute(query, values)
 
-            db.session.commit()
-            #db.session.close()
-            print("CSV data imported successfully!")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("CSV data imported successfully!")
 
     except FileNotFoundError:
         print("Error: CSV file not found.")
@@ -122,3 +95,6 @@ def find_image_for_cereal(cereal_name):
             return (filename)  # Return full path to the image
 
     return None  # No match found
+
+if __name__ == "__main__":
+    parse_csv()
