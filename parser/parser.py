@@ -41,10 +41,6 @@ def generate_price():
 def generate_storage():
     return random.randint(0, 10)
 
-#def create_db():
-    with app.app_context():
-        db.create_all()
-
 def import_csv_data():
     """Reads data from the CSV file and inserts it into the database."""
     try:
