@@ -22,7 +22,7 @@ echo "Creating table $TABLE_ONE_NAME"
 SQL_COMMANDS="
 CREATE TABLE $TABLE_ONE_NAME (
     Id SERIAL PRIMARY KEY,               -- Auto-incremented integer as primary key
-    Price INT,                           -- Integer for price
+    Price FLOAT,                           -- Integer for price
     Storage INT,                         -- Units in storage
     Name VARCHAR(255),                   -- String for the product name
     Manufacturer VARCHAR(255),           -- String for manufacturer name
@@ -32,7 +32,7 @@ CREATE TABLE $TABLE_ONE_NAME (
     Fat INT,                             -- Integer for fat content
     Sodium INT,                          -- Integer for sodium content
     Fiber FLOAT,                         -- Float for fiber content
-    Carbons FLOAT,                       -- Float for carbon content
+    Carbs FLOAT,                       -- Float for carbon content
     Sugars INT,                          -- Integer for sugars
     Potassium INT,                       -- Integer for potassium
     Vitamins INT,                        -- Integer for vitamins
@@ -45,7 +45,7 @@ CREATE TABLE $TABLE_ONE_NAME (
 
 CREATE TABLE $TABLE_TWO_NAME (
     Id SERIAL PRIMARY KEY,               -- Auto-incremented integer as primary key
-    Price INT,                           -- Integer for total price
+    Price FLOAT,                           -- Integer for total price
     Date DATE,                           -- Date for the order
     Buyer VARCHAR(255),                  -- String for the buyer name
     Address VARCHAR(255)                 -- String for the address
