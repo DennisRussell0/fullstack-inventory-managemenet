@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cereal_user:yourpassword@localhost/cereal_db'
+cereal_user = "postgres"
+password = "250101"
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{cereal_user}:{password}@localhost/cerealdatabase'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Not necessary - better performance
 
 db = SQLAlchemy()
