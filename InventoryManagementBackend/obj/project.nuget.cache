@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "yFcxXqgZodU=",
+  "dgSpecHash": "Eq/zmVm0vng=",
   "success": true,
-  "projectFilePath": "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
+  "projectFilePath": "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\A-SPAC05\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.3\\microsoft.aspnetcore.openapi.9.0.3.nupkg.sha512",
-    "C:\\Users\\A-SPAC05\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+    "C:\\Users\\A-SPAC01\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.3\\microsoft.aspnetcore.openapi.9.0.3.nupkg.sha512",
+    "C:\\Users\\A-SPAC01\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\A-SPAC01\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\A-SPAC01\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\A-SPAC01\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
   ],
   "logs": []
 }

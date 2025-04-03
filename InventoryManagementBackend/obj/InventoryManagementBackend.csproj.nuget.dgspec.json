@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj": {}
+    "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj": {
+    "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
+        "projectUniqueName": "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
         "projectName": "InventoryManagementBackend",
-        "projectPath": "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
-        "packagesPath": "C:\\Users\\A-SPAC05\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\A-SPAC05\\Desktop\\Projects\\Week6+7\\fullstack-inventory-managemenet\\InventoryManagementBackend\\obj\\",
+        "projectPath": "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\InventoryManagementBackend.csproj",
+        "packagesPath": "C:\\Users\\A-SPAC01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\A-SPAC01\\ProjektMappe\\fullstack-inventory-managemenet\\InventoryManagementBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\A-SPAC05\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\A-SPAC01\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -45,6 +45,10 @@
           "targetAlias": "net9.0",
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
+            "Npgsql": {
               "target": "Package",
               "version": "[9.0.3, )"
             }
