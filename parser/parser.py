@@ -27,6 +27,13 @@ def generate_manufacturer(manufacturer):
         case default:
             pass
 
+def generate_type(type):
+    match type:
+        case "C":
+            return "Cold"
+        case "H":
+            return "Hot"
+
 def parse_csv():
     try:
         conn = psycopg2.connect(
@@ -45,6 +52,7 @@ def parse_csv():
             for row in rows[2:]:
                 row_dict = dict(zip(keys, row))
                 row_dict['manufacturer'] = generate_manufacturer(row_dict['manufacturer'])
+                row_dict['type'] = generate_type(row_dict['type'])
                 row_dict['price'] = generate_price()
                 row_dict['storage'] = generate_storage()
                 row_dict['image_path'] = find_image_for_cereal(row_dict['name'])
