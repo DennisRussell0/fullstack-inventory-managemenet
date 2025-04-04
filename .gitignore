@@ -1,0 +1,6 @@
+InventoryManagementBackend/bin/
+InventoryManagementBackend/bin/*
+InventoryManagementBackend/obj/
+InventoryManagementBackend/obj/*
+InventoryManagementBackend/Properties/launchSettings.json
+.vscode/

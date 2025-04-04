@@ -3,29 +3,30 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace InventoryManagementBackend.Entities;
 
-public class Product(int id, float price, int storage, string? name, string? manufacturer, string? type, int calories, int protein, int fat, int sodium, float fiber, float carbs, int sugars, int potassium, int vitamins, int shelf, float weight, float cups, float rating, string? imagePath)
+public class Product
 {
-    public int Id { get; set; } = id;
-    public float Price { get; set; } = price;
-    public int Storage { get; set; } = storage;
-    public string? Name { get; set; } = name;
-    public string? Manufacturer { get; set; } = manufacturer;
-    public string? Type { get; set; } = type;
-    public int Calories { get; set; } = calories;
-    public int Protein { get; set; } = protein;
-    public int Fat { get; set; } = fat;
-    public int Sodium { get; set; } = sodium;
-    public float Fiber { get; set; } = fiber;
-    public float Carbs { get; set; } = carbs;
-    public int Sugars { get; set; } = sugars;
-    public int Potassium { get; set; } = potassium;
-    public int Vitamins { get; set; } = vitamins;
-    public int Shelf { get; set; } = shelf;
-    public float Weight { get; set; } = weight;
-    public float Cups { get; set; } = cups;
-    public float Rating { get; set; } = rating;
-    public string? ImagePath { get; set; } = imagePath;
+    public int Id { get; set; }
+    public float Price { get; set; }
+    public int Storage { get; set; }
+    public string? Name { get; set; }
+    public string? Manufacturer { get; set; }
+    public string? Type { get; set; }
+    public int Calories { get; set; }
+    public int Protein { get; set; }
+    public int Fat { get; set; }
+    public int Sodium { get; set; }
+    public float Fiber { get; set; }
+    public float Carbs { get; set; }
+    public int Sugars { get; set; }
+    public int Potassium { get; set; }
+    public int Vitamins { get; set; }
+    public int Shelf { get; set; }
+    public float Weight { get; set; }
+    public float Cups { get; set; }
+    public float Rating { get; set; }
+    public string? ImagePath { get; set; }
 
+    public Product(){ }
     public void DeleteProduct(){
 
     }
