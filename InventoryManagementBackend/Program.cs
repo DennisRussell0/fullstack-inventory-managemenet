@@ -1,3 +1,6 @@
+using InventoryManagementBackend.Data;
+using InventoryManagementBackend.API;
+using InventoryManagementBackend.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -7,6 +10,8 @@ builder.Services.AddControllers();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IDatabaseConnector, DatabaseConnector>();
 
 var app = builder.Build();
 
