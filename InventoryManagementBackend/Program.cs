@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IDatabaseConnector, DatabaseConnector>();
+builder.Services.AddSingleton<IDatabaseConnector, DatabaseConnector>();
 
 var app = builder.Build();
 
