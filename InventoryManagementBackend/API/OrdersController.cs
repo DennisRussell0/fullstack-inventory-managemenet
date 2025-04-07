@@ -131,14 +131,8 @@ namespace InventoryManagementBackend.API
 
         // Endpoint for deleting an existing order
         [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id, [FromHeader(Name = "Authorization")] string? authToken)
+        public IActionResult DeleteOrder(int id)
         {
-            // Check for a valid authorization token (replace with real authentication logic)
-            if (string.IsNullOrEmpty(authToken) || authToken != "your_auth_token")
-            {
-                return Unauthorized(new { message = "Unauthorized access." });
-            }
-
             // Check if the order exists
             var order = dbConnector.RetrieveOrderById(id);
             if (order == null)
