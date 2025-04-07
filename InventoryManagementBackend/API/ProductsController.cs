@@ -107,12 +107,8 @@ namespace InventoryManagementBackend.API
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id, [FromHeader(Name = "Authorization")] string? authToken)
+        public IActionResult DeleteProduct(int id)
         {
-            if (string.IsNullOrEmpty(authToken) || authToken != "your_auth_token") // Replace with actual authentication check /!/ 
-            {
-                return Unauthorized(new { message = "Unauthorized access." });
-            }
 
             // Check if the product exists in the database
             
