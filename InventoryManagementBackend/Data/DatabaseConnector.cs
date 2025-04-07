@@ -240,7 +240,7 @@ public class DatabaseConnector : IDatabaseConnector
         var result = command.ExecuteScalar();
         if (result == null)
         {
-            throw new InvalidOperationException("Failed to retrieve the order ID.");
+            return false;
         }
         int orderId = Convert.ToInt32(result);
 
