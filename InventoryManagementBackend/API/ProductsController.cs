@@ -36,7 +36,7 @@ namespace InventoryManagementBackend.API
         [HttpGet("{id}")]
         public IActionResult GetProductById(int id)
         {
-            Product product = dbConnector.RetrieveProductById(id); // Replace with actual database call /!/ 
+            Product? product = dbConnector.RetrieveProductById(id); // Replace with actual database call /!/ 
             if (product == null)
             {
                 return NotFound(new { message = "Product not found." });
@@ -58,7 +58,7 @@ namespace InventoryManagementBackend.API
                 return BadRequest(new { message = "Invalid product data." });
             }
 
-            dbConnector.AddProduct(product); // Replace with actual database call /!/ 
+            dbConnector.PostProduct(product); // Replace with actual database call /!/ 
 
             var response = new
             {
@@ -76,7 +76,7 @@ namespace InventoryManagementBackend.API
                 return BadRequest(new { message = "Invalid product data." });
             }
 
-            Product existingProduct = dbConnector.RetrieveProductById(id); // Replace with actual database call /!/ 
+            Product? existingProduct = dbConnector.RetrieveProductById(id); 
             if (existingProduct == null)
             {
                 return NotFound(new { message = "Product not found." });
@@ -91,7 +91,7 @@ namespace InventoryManagementBackend.API
                 }
             }
             
-            bool success = dbConnector.UpdateProduct(product); // Replace with actual database call /!/ 
+            bool success = dbConnector.UpdateProduct(product);
             if (!success)
             {
                 return StatusCode(500, new { message = "Failed to update product." });
@@ -115,14 +115,15 @@ namespace InventoryManagementBackend.API
             }
 
             // Check if the product exists in the database
-        
-            Product product = dbConnector.RetrieveProductById(id); // Replace with actual database call /!/ 
+            
+            
+            Product? product = dbConnector.RetrieveProductById(id); 
             if (product == null)
             {
                 return NotFound(new { message = "Product not found." });
             }
 
-            dbConnector.DeleteProduct(id); // Replace with actual database call /!/ 
+            dbConnector.DeleteProduct(id); 
 
             var response = new
             {
