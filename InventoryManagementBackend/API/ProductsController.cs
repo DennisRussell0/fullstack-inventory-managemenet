@@ -22,13 +22,34 @@ namespace InventoryManagementBackend.API
             {
                 return NotFound(new { message = "No products found." });
             };
+            
+            string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images");
+            var productsWithImages = products.Select(product => {
+                var productData = typeof(Product).GetProperties()
+                    .ToDictionary(prop => prop.Name, prop => prop.GetValue(product));
 
+                // Add the image as Base64 if the ImagePath exists
+            if (!string.IsNullOrEmpty(product.ImagePath) && System.IO.File.Exists(Path.Combine(imagesFolderPath, product.ImagePath)))
+            {
+                byte[] imageBytes = System.IO.File.ReadAllBytes(Path.Combine(imagesFolderPath, product.ImagePath));
+                productData["Image"] = Convert.ToBase64String(imageBytes);
+            }
+            else
+            {
+
+                productData["Image"] = null;
+          
+            }
+                return productData;
+            });
 
             var response = new
             {
                 message = "Products received successfully.",
-                data = products
+                data = productsWithImages
             };
+
+
 
             return Ok(response);
         }
@@ -42,10 +63,27 @@ namespace InventoryManagementBackend.API
                 return NotFound(new { message = "Product not found." });
             }
 
+            string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "images"); 
+
+            var productWithImage = typeof(Product).GetProperties()
+                    .ToDictionary(prop => prop.Name, prop => prop.GetValue(product));
+
+                // Add the image as Base64 if the ImagePath exists
+            if (!string.IsNullOrEmpty(product.ImagePath) && System.IO.File.Exists(Path.Combine(imagesFolderPath, product.ImagePath)))
+            {
+                byte[] imageBytes = System.IO.File.ReadAllBytes(Path.Combine(imagesFolderPath, product.ImagePath));
+                productWithImage["Image"] = Convert.ToBase64String(imageBytes);
+            }
+            else
+            {
+                productWithImage["Image"] = null;
+            }
+ 
+
             var response = new
             {
                 message = "Product received successfully.",
-                data = product
+                data = productWithImage
             };
 
             return Ok(response);
