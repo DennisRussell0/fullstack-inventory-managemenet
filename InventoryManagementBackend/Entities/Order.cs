@@ -2,15 +2,16 @@ using System;
 
 namespace InventoryManagementBackend.Entities;
 
-public class Order(int id, float price, DateTime date, string? buyer, string? address, Product[]? products)
+public class Order
 {
-    public int Id { get; set; } = id;
-    public float Price { get; set; } = price;
-    public DateTime Date { get; set; } = date;
-    public string? Buyer { get; set; } = buyer;
-    public string? Address { get; set; } = address;
-    public Product[]? Products { get; set; } = products;
+    public int Id { get; set; }
+    public float Price { get; set; }
+    public DateTime Date { get; set; }
+    public string? Buyer { get; set; }
+    public string? Address { get; set; }
+    public List<(int, int)> Products { get; set; } = [];
 
+    public Order(){ }
     public void CancelOrder(){
 
     }

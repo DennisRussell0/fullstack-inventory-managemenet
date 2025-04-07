@@ -162,4 +162,196 @@ public class DatabaseConnector : IDatabaseConnector
 
         return rowsAffected > 0;
     }
+
+    public List<Order> RetrieveOrders()
+    {
+        List<Order> orders = new List<Order>();
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        using var command = new NpgsqlCommand("SELECT * FROM orders", connection);
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            List<(int,int)> products = RetrieveProductsByOrderId(reader.GetInt32(reader.GetOrdinal("id")));
+
+            if (products == null || products.Count == 0){
+                continue;
+            }
+
+            var order = new Order
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                Price = reader.GetFloat(reader.GetOrdinal("price")),
+                Date = reader.GetDateTime(reader.GetOrdinal("date")),
+                Buyer = reader.GetString(reader.GetOrdinal("buyer")),
+                Address = reader.GetString(reader.GetOrdinal("address")),
+                Products = products
+            };
+
+            orders.Add(order);
+        }
+
+        return orders;
+    }
+
+    public Order? RetrieveOrderById(int id)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        using var command = new NpgsqlCommand("SELECT * FROM orders WHERE id = @id", connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            List<(int,int)> products = RetrieveProductsByOrderId(reader.GetInt32(reader.GetOrdinal("id")));
+
+            if (products == null || products.Count == 0){
+                return null;
+            }
+
+            return new Order
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                Price = reader.GetFloat(reader.GetOrdinal("price")),
+                Date = reader.GetDateTime(reader.GetOrdinal("date")),
+                Buyer = reader.GetString(reader.GetOrdinal("buyer")),
+                Address = reader.GetString(reader.GetOrdinal("address")),
+                Products = products
+            };
+        }
+
+        return null;
+    }
+
+    public bool PostOrder(Order newOrder)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        using var command = new NpgsqlCommand("INSERT INTO orders (price, date, buyer, address) VALUES (@price, @date, @buyer, @address) RETURNING id", connection);
+        command.Parameters.AddWithValue("@price", newOrder.Price);
+        command.Parameters.AddWithValue("@date", newOrder.Date);
+        command.Parameters.AddWithValue("@buyer", newOrder.Buyer ?? (Object) DBNull.Value);
+        command.Parameters.AddWithValue("@address", newOrder.Address ?? (Object) DBNull.Value);
+
+        var result = command.ExecuteScalar();
+        if (result == null)
+        {
+            throw new InvalidOperationException("Failed to retrieve the order ID.");
+        }
+        int orderId = Convert.ToInt32(result);
+
+        foreach (var product in newOrder.Products)
+        {
+            using var productCommand = new NpgsqlCommand("INSERT INTO order_products (order_id, product_id, quantity) VALUES (@orderId, @productId, @quantity)", connection);
+            productCommand.Parameters.AddWithValue("@orderId", orderId);
+            productCommand.Parameters.AddWithValue("@productId", product.Item1);
+            productCommand.Parameters.AddWithValue("@quantity", product.Item2);
+            productCommand.ExecuteNonQuery();
+        }
+
+        return true;
+    }
+    
+    public bool UpdateOrder(Order updatedOrder)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        // Update the order details
+        using var command = new NpgsqlCommand("UPDATE orders SET price = @price, date = @date, buyer = @buyer, address = @address WHERE id = @id", connection);
+        command.Parameters.AddWithValue("@price", updatedOrder.Price);
+        command.Parameters.AddWithValue("@date", updatedOrder.Date);
+        command.Parameters.AddWithValue("@buyer", updatedOrder.Buyer ?? (Object) DBNull.Value);
+        command.Parameters.AddWithValue("@address", updatedOrder.Address ?? (Object) DBNull.Value);
+        command.Parameters.AddWithValue("@id", updatedOrder.Id);
+
+        int rowsAffected = command.ExecuteNonQuery();
+        
+        // Retrieve existing products for the order
+        var existingProducts = RetrieveProductsByOrderId(updatedOrder.Id);
+
+        // Update or insert products
+        foreach (var product in updatedOrder.Products)
+        {
+            var existingProduct = existingProducts.FirstOrDefault(p => p.Item1 == product.Item1);
+            if (existingProduct != default)
+            {
+                // Update quantity if the product already exists
+                using var updateCommand = new NpgsqlCommand("UPDATE order_products SET quantity = @quantity WHERE order_id = @orderId AND product_id = @productId", connection);
+                updateCommand.Parameters.AddWithValue("@quantity", product.Item2);
+                updateCommand.Parameters.AddWithValue("@orderId", updatedOrder.Id);
+                updateCommand.Parameters.AddWithValue("@productId", product.Item1);
+                updateCommand.ExecuteNonQuery();
+            }
+            else
+            {
+                // Insert new product if it doesn't exist
+                using var insertCommand = new NpgsqlCommand("INSERT INTO order_products (order_id, product_id, quantity) VALUES (@orderId, @productId, @quantity)", connection);
+                insertCommand.Parameters.AddWithValue("@orderId", updatedOrder.Id);
+                insertCommand.Parameters.AddWithValue("@productId", product.Item1);
+                insertCommand.Parameters.AddWithValue("@quantity", product.Item2);
+                insertCommand.ExecuteNonQuery();
+            }
+        }
+
+        // Remove products that are no longer in the updated order
+        foreach (var existingProduct in existingProducts)
+        {
+            if (!updatedOrder.Products.Any(p => p.Item1 == existingProduct.Item1))
+            {
+                using var deleteCommand = new NpgsqlCommand("DELETE FROM order_products WHERE order_id = @orderId AND product_id = @productId", connection);
+                deleteCommand.Parameters.AddWithValue("@orderId", updatedOrder.Id);
+                deleteCommand.Parameters.AddWithValue("@productId", existingProduct.Item1);
+                deleteCommand.ExecuteNonQuery();
+            }
+        }
+
+
+        return rowsAffected > 0;
+    }
+
+    public bool DeleteOrder(int id)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        // Delete the order and its associated products
+        using var command = new NpgsqlCommand("DELETE FROM orders WHERE id = @id", connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        // First delete the associated products
+        using var deleteProductsCommand = new NpgsqlCommand("DELETE FROM order_products WHERE order_id = @id", connection);
+        deleteProductsCommand.Parameters.AddWithValue("@id", id);
+        deleteProductsCommand.ExecuteNonQuery();
+
+
+        // Execute the delete command for the order
+        int rowsAffected = command.ExecuteNonQuery();
+
+
+
+        return rowsAffected > 0;
+    }
+
+    public List<(int, int)> RetrieveProductsByOrderId(int orderId)
+    {
+        List<(int, int)> products = new List<(int, int)>();
+        using var connection = new NpgsqlConnection(_connectionString);
+        connection.Open();
+
+        using var command = new NpgsqlCommand("SELECT product_id, quantity FROM order_products WHERE order_id = @orderId", connection);
+        command.Parameters.AddWithValue("@orderId", orderId);
+
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            products.Add((reader.GetInt32(0), reader.GetInt32(1)));
+        }
+
+        return products;
+    }
 }
