@@ -22,6 +22,8 @@ public class DatabaseConnector : IDatabaseConnector
         {
             Id = reader.GetInt32(reader.GetOrdinal("id")),
             Name = reader.GetString(reader.GetOrdinal("name")),
+            Storage = reader.GetInt32(reader.GetOrdinal("storage")),
+            Price = reader.GetFloat(reader.GetOrdinal("price")),
             Manufacturer = reader.GetString(reader.GetOrdinal("manufacturer")),
             Type = reader.GetString(reader.GetOrdinal("type")),
             Calories = reader.GetInt32(reader.GetOrdinal("calories")),
@@ -61,6 +63,8 @@ public class DatabaseConnector : IDatabaseConnector
             return new Product{
                 Id = reader.GetInt32(reader.GetOrdinal("id")),
                 Name = reader.GetString(reader.GetOrdinal("name")),
+                Storage = reader.GetInt32(reader.GetOrdinal("storage")),
+                Price = reader.GetFloat(reader.GetOrdinal("price")),
                 Manufacturer = reader.GetString(reader.GetOrdinal("manufacturer")),
                 Type = reader.GetString(reader.GetOrdinal("type")),
                 Calories = reader.GetInt32(reader.GetOrdinal("calories")),
