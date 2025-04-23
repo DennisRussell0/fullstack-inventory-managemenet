@@ -1,5 +1,7 @@
 InventoryManagementBackend/bin/
 InventoryManagementBackend/bin/*
+InventoryManagementBackend/bin/Debug/net9.0/
+InventoryManagementBackend/bin/Debug/net9.0/*
 InventoryManagementBackend/obj/
 InventoryManagementBackend/obj/*
 InventoryManagementBackend/Properties/launchSettings.json
