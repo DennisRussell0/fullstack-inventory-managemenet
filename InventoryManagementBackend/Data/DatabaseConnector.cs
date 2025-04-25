@@ -9,7 +9,7 @@ namespace InventoryManagementBackend.Data;
 
 public class DatabaseConnector : IDatabaseConnector
 {
-    private readonly string _connectionString = "Host=localhost;Username=postgres;Password=250101;Database=cerealdatabase";
+    private readonly string _connectionString = "Host=localhost;Username=postgres;Password=250505;Database=cerealdatabase";
 
     public List<Product> RetrieveProducts()
     {

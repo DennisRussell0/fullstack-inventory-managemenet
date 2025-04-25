@@ -27,7 +27,9 @@ const Orders = () => {
     }
 
     if (orders.length === 0) {
-        return <div className='w-svw'>No orders available.</div>;
+        return (<div className='flex flex-col items-center justify-center h-full w-full'>
+        <h1 className='text-2xl font-bold'>No orders found</h1>
+        </div>);
     }
 
     return (

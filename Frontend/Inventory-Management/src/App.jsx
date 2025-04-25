@@ -10,15 +10,20 @@ function App() {
 
   return (
     <>
+    <div className='h-screen w-screen flex flex-col bg-gray-100'>
       <Router>
-      <Header />
-        <Routes>
-          <Route path="/" element={<Navigate to="/storage" replace/>}/>
-          <Route path="/storage" element={<Storage/>}/>
-          <Route path="/orders" element={<Orders/>}/>
-        </Routes>
+        <Header />
+        <div className="flex-1 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Navigate to="/storage" replace/>}/>
+            <Route path="/storage" element={<Storage/>}/>
+            <Route path="/orders" element={<Orders/>}/>
+          </Routes>  
+        </div>
       </Router>
+    </div>
     </>    
+
    )
 }
 

@@ -17,6 +17,7 @@
 
 * {
   border-color: #696969;
+  box-sizing: border-box;
 }
 
 a {
@@ -27,11 +28,17 @@ a:hover {
   color: #646cff;
 }
 
+html, body{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow:hidden;
+}
+
 body {
   margin: 0;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
   overflow-x: hidden;
 }
 
@@ -84,7 +91,8 @@ header, aside {
     color: #213547;
   }
   button {
-    background-color: #ededed;
+    background-color: #5d5ded;
+    color: white;
   }
   header, aside {
     background-color: #ffffff;
